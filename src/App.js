@@ -29,77 +29,72 @@ function App() {
   const db = getFirestore();
 
   const saveDataToFirestore = async () => {
+    // Validate that all required fields are filled
+    if (
+      !BusinessName.trim() ||
+      !Email.trim() ||
+      !Location.trim() ||
+      Items.length === 0
+    ) {
+      console.error("All fields are required before saving to Firestore.");
+      alert("Please fill in all fields before submitting.");
+      return; // Stop function execution if validation fails
+    }
     const docRef = await addDoc(collection(db, "Businesses"), {
       Name: BusinessName,
       Email: Email,
       Location: Location,
       TimeCreated: new Date().toISOString(), //saves the timestamp of creation
-      Items: Items
-
+      Items: Items,
     });
-    alert("in database now");
+    SetBusinessName("");
+    SetEmail("");
+    SetLocation("");
+    SetSingleItem("");
+    SetItems([]);
+    // alert("in database now");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <div>
-        <h1>Business Information Form</h1>
+    <form onSubmit={handleSubmit}>
+      <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+        <div>
+          <h1>Business Information Form</h1>
 
-        <div style={{ marginBottom: "10px" }}>
-          <label>Business Name:</label>
-          <input
-            type="text"
-            name="businessName"
-            value={BusinessName}
-            onChange={(e) => SetBusinessName(e.target.value)}
-            placeholder="Enter Business Name"
-            style={{ marginLeft: "10px" }}
-          />
+          <div style={{ marginBottom: "10px" }}>
+            <label>Business Name:</label>
+            <input
+              type="text"
+              name="businessName"
+              value={BusinessName}
+              onChange={(e) => SetBusinessName(e.target.value)}
+              placeholder="Enter Business Name"
+              style={{ marginLeft: "10px" }}
+              required
+            />
+          </div>
+
+          {/* ADDING THE EMAIL INFORMATION OF A BUSINESS HERE */}
+          <div style={{ marginBottom: "10px" }}>
+            <label>Email Address:</label>
+            <input
+              type="text"
+              name="email"
+              value={Email}
+              onChange={(e) => SetEmail(e.target.value)}
+              placeholder="Enter Email Address"
+              style={{ marginLeft: "10px" }}
+              required
+            />
+          </div>
         </div>
-        {/* 
-      <div style={{ marginBottom: "10px" }}>
-        <label>Business Address:</label>
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Enter Business Address"
-          style={{ marginLeft: "10px" }}
-        />
-      </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        <label>Phone Number:</label>
-        <input
-          type="text"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Enter Phone Number"
-          style={{ marginLeft: "10px" }}
-        />
-      </div> */}
-
-        {/* ADDING THE EMAIL INFORMATION OF A BUSINESS HERE */}
+        {/* ADDING THE LOCATION FIELD OF THE BUSINESS HERE */}
         <div style={{ marginBottom: "10px" }}>
-          <label>Email Address:</label>
-          <input
-            type="text"
-            name="email"
-            value={Email}
-            onChange={(e) => SetEmail(e.target.value)}
-            placeholder="Enter Email Address"
-            style={{ marginLeft: "10px" }}
-          />
-        </div>
-      </div>
-
-
-      {/* ADDING THE LOCATION FIELD OF THE BUSINESS HERE */}
-      <div style={{ marginBottom: "10px" }}>
           <label>Location:</label>
           <input
             type="text"
@@ -108,52 +103,43 @@ function App() {
             onChange={(e) => SetLocation(e.target.value)}
             placeholder="Enter Address"
             style={{ marginLeft: "10px" }}
+            required
           />
         </div>
 
-        {/* ADDING THE DATE CREATED
+        {/* Items Field */}
         <div style={{ marginBottom: "10px" }}>
-        <label>Time Created:</label>
-        <input
-          type="datetime-local"
-          name="timeCreated"
-          value={TimeCreated}
-          onChange={(e) => SetTimeCreated(e.target.value)}
-          style={{ marginLeft: "10px" }}
-        />
-      </div> */}
+          <label>Items:</label>
+          <input
+            type="text"
+            name="singleItem"
+            value={SingleItem}
+            onChange={(e) => SetSingleItem(e.target.value)}
+            placeholder="Enter an item"
+            style={{ marginLeft: "10px" }}
+            required
+          />
+          <button onClick={addItem} style={{ marginLeft: "10px" }}>
+            Add Item
+          </button>
+        </div>
 
-      {/* Items Field */}
-      <div style={{ marginBottom: "10px" }}>
-        <label>Items:</label>
-        <input
-          type="text"
-          name="singleItem"
-          value={SingleItem}
-          onChange={(e) => SetSingleItem(e.target.value)}
-          placeholder="Enter an item"
-          style={{ marginLeft: "10px" }}
-        />
-        <button onClick={addItem} style={{ marginLeft: "10px" }}>
-          Add Item
+        {/* Display Added Items */}
+        <div style={{ marginBottom: "10px" }}>
+          <h3>Added Items:</h3>
+          <ul>
+            {Items.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Submit Button */}
+        <button onClick={saveDataToFirestore} style={{ marginTop: "10px" }}>
+          Submit
         </button>
       </div>
-
-      {/* Display Added Items */}
-      <div style={{ marginBottom: "10px" }}>
-        <h3>Added Items:</h3>
-        <ul>
-          {Items.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Submit Button */}
-      <button onClick={saveDataToFirestore} style={{ marginTop: "10px" }}>
-        Submit
-      </button>
-    </div>
+    </form>
   );
 }
 

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./firebaseConfig";
 import { getFirestore, addDoc, collection } from "firebase/firestore";
+import FileUpload from "./services/FileUpload";
+
 function App() {
   const [BusinessName, SetBusinessName] = useState("");
 
@@ -24,8 +26,12 @@ function App() {
       SetItems([...Items, SingleItem]);
       SetSingleItem(""); // Clear the input field
     }
-  };
+  // Function to handle extracted items from the FileUpload component
 
+  };
+  const handleItemsExtracted = (extractedItems) => {
+    SetItems(extractedItems);
+  };
   const db = getFirestore();
 
   const saveDataToFirestore = async () => {
@@ -106,6 +112,8 @@ function App() {
             required
           />
         </div>
+        {/* File Upload Field */}
+        <FileUpload onItemsExtracted={handleItemsExtracted} />
 
         {/* Items Field */}
         <div style={{ marginBottom: "10px" }}>

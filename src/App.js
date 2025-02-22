@@ -34,6 +34,9 @@ function App() {
   };
   const db = getFirestore();
 
+  const handleClearFile = () => {
+    SetItems([]);
+  };
   const saveDataToFirestore = async () => {
     // Validate that all required fields are filled
     if (
@@ -57,6 +60,7 @@ function App() {
     SetEmail("");
     SetLocation("");
     // SetSingleItem("");
+    handleClearFile(); // Clear the file input
     SetItems([]);
     // alert("in database now");
   };
@@ -113,7 +117,8 @@ function App() {
           />
         </div>
         {/* File Upload Field */}
-        <FileUpload onItemsExtracted={handleItemsExtracted} />
+        <FileUpload onItemsExtracted={handleItemsExtracted}
+        onClearFile={handleClearFile} />
 
         {/* Items Field */}
         <div style={{ marginBottom: "10px" }}>

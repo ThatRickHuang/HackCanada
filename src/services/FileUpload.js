@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import * as XLSX from "xlsx";
 import Papa from "papaparse";
 
-const FileUpload = ({ onItemsExtracted }) => {
+const FileUpload = ({ onItemsExtracted, onClearFile }) => {
   const [UploadedFile, SetUploadedFile] = useState(null);
+  const fileInputRef = useRef(null); // Create a ref for the file input
 
+  // Function to handle file upload
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -13,6 +15,7 @@ const FileUpload = ({ onItemsExtracted }) => {
     }
   };
 
+  // Function to extract items from the uploaded file
   const extractItemsFromFile = (file) => {
     const reader = new FileReader();
 
@@ -40,14 +43,28 @@ const FileUpload = ({ onItemsExtracted }) => {
     reader.readAsBinaryString(file);
   };
 
+  // Function to clear the file input
+  const clearFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Clear the file input
+    }
+    SetUploadedFile(null); // Clear the uploaded file state
+    onClearFile(); // Notify the parent component
+  };
+
   return (
-    <div>
+    <div style={{ marginBottom: "10px" }}>
       <label>Upload Excel/CSV File:</label>
       <input
         type="file"
         accept=".xlsx, .csv"
         onChange={handleFileUpload}
+        ref={fileInputRef} // Attach the ref to the file input
+        style={{ marginLeft: "10px" }}
       />
+      <button onClick={clearFileInput} style={{ marginLeft: "10px" }}>
+        Clear File
+      </button>
     </div>
   );
 };

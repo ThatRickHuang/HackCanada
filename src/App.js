@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { db } from "./firebaseConfig"; // Import Firestore instance
-import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
-
+import "./firebaseConfig";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
 function App() {
   const [BusinessName, SetBusinessName] = useState("");
   const [Email, SetEmail] = useState("");
@@ -9,7 +8,7 @@ function App() {
   const db = getFirestore();
 
   const saveDataToFirestore = async () => {
-    const docRef = await addDoct(collection(db, "myCollection"), {
+    const docRef = await addDoc(collection(db, "myCollection"), {
       field1: BusinessName,
       field2: Email,
     });
@@ -18,20 +17,21 @@ function App() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Business Information Form</h1>
+      <div>
+        <h1>Business Information Form</h1>
 
-      <div style={{ marginBottom: "10px" }}>
-        <label>Business Name:</label>
-        <input
-          type="text"
-          name="businessName"
-          value={BusinessName}
-          onChange={(e) => SetBusinessName}
-          placeholder="Enter Business Name"
-          style={{ marginLeft: "10px" }}
-        />
-      </div>
-      {/* 
+        <div style={{ marginBottom: "10px" }}>
+          <label>Business Name:</label>
+          <input
+            type="text"
+            name="businessName"
+            value={BusinessName}
+            onChange={(e) => SetBusinessName(e.target.value)}
+            placeholder="Enter Business Name"
+            style={{ marginLeft: "10px" }}
+          />
+        </div>
+        {/* 
       <div style={{ marginBottom: "10px" }}>
         <label>Business Address:</label>
         <input
@@ -58,16 +58,18 @@ function App() {
         />
       </div> */}
 
-      <div style={{ marginBottom: "10px" }}>
-        <label>Email Address:</label>
-        <input
-          type="text"
-          name="email"
-          value={formData.email}
-          onChange={(e) => SetEmail}
-          placeholder="Enter Email Address"
-          style={{ marginLeft: "10px" }}
-        />
+        <div style={{ marginBottom: "10px" }}>
+          <label>Email Address:</label>
+          <input
+            type="text"
+            name="email"
+            value={Email}
+            onChange={(e) => SetEmail(e.target.value)}
+            placeholder="Enter Email Address"
+            style={{ marginLeft: "10px" }}
+          />
+        </div>
+        <button onClick={saveDataToFirestore}> Save to Firestore</button>
       </div>
     </div>
   );

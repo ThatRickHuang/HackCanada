@@ -56,7 +56,7 @@ function App() {
     SetBusinessName("");
     SetEmail("");
     SetLocation("");
-    SetSingleItem("");
+    // SetSingleItem("");
     SetItems([]);
     // alert("in database now");
   };

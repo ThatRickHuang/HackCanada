@@ -318,3 +318,27 @@ body {
   height: 10vh;
   background-color: #001532;
 }
+
+.aboutUs {
+  height: 70vh;
+  background-color: #ff8bb1;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+
+.aboutUs1 {
+  width: 50%;
+  height: 60vh;
+}
+
+.aboutUs2 {
+  width: 50%;
+  height: 60vh;
+}
+
+.adjust {
+  width: 100px;
+}

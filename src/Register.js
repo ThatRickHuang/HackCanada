@@ -4,6 +4,9 @@ import { db } from "./firebaseConfig";
 import "./register.css";
 import logo from "./Logo.png";
 import addProductIcon from "./addProduct.png";
+import { generateAndSaveItems } from "./services/GenerateItems";
+import { generateEmbeddingsForItems } from "./services/GenerateVectors";
+import SearchBar from "./services/SearchBar";
 
 function Register() {
   const [BusinessName, SetBusinessName] = useState("");
@@ -20,6 +23,8 @@ function Register() {
   };
 
   const saveDataToFirestore = async () => {
+    // generateAndSaveItems();
+    generateEmbeddingsForItems();
     if (
       !BusinessName.trim() ||
       !Email.trim() ||
@@ -156,6 +161,7 @@ function Register() {
           </div>
 
           {/* Submit Button */}
+          <SearchBar />
           <button onClick={saveDataToFirestore} className="submit-btn">
             SUBMIT
           </button>

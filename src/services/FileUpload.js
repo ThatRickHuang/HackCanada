@@ -3,53 +3,58 @@ import * as XLSX from "xlsx";
 import Papa from "papaparse";
 
 const FileUpload = ({ onItemsExtracted, onClearFile }) => {
-  const [UploadedFile, SetUploadedFile] = useState(null);
-  const fileInputRef = useRef(null); // Create a ref for the file input
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const fileInputRef = useRef(null);
 
-  // Function to handle file upload
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      SetUploadedFile(file);
+      setUploadedFile(file);
       extractItemsFromFile(file);
     }
   };
 
-  // Function to extract items from the uploaded file
   const extractItemsFromFile = (file) => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
       const data = e.target.result;
+      let items = [];
 
       if (file.name.endsWith(".xlsx")) {
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        const items = jsonData.map((row) => row[0]).filter((item) => item);
-        onItemsExtracted(items);
+        
+        items = jsonData
+          .map((row) => ({ name: row[0], cost: row[1] }))
+          .filter((item) => item.name && item.cost !== undefined);
       } else if (file.name.endsWith(".csv")) {
         Papa.parse(data, {
           complete: (result) => {
-            const items = result.data.map((row) => row[0]).filter((item) => item);
-            onItemsExtracted(items);
+            const parsedItems = result.data
+              .map((row) => ({ name: row[0], cost: row[1] }))
+              .filter((item) => item.name && item.cost !== undefined);
+            onItemsExtracted(parsedItems);
           },
           header: false,
         });
+        return;
       }
+
+      onItemsExtracted(items);
     };
 
     reader.readAsBinaryString(file);
   };
 
-  // Function to clear the file input
   const clearFileInput = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Clear the file input
+      fileInputRef.current.value = "";
     }
-    SetUploadedFile(null); // Clear the uploaded file state
-    onClearFile(); // Notify the parent component
+    setUploadedFile(null);
+    onClearFile();
   };
 
   return (
@@ -59,7 +64,7 @@ const FileUpload = ({ onItemsExtracted, onClearFile }) => {
         type="file"
         accept=".xlsx, .csv"
         onChange={handleFileUpload}
-        ref={fileInputRef} // Attach the ref to the file input
+        ref={fileInputRef}
         style={{ marginLeft: "10px" }}
       />
       <button onClick={clearFileInput} style={{ marginLeft: "10px" }}>

@@ -1,10 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom"; // For navigation
+// import SearchBar from "./services/SearchBar";
+import searchIcon from "./searchIcon.png";
 
 // Import images from the same directory
 import leavesGif from "./leaves.gif";
 import logo from "./Logo.png";
-import searchIcon from "./searchIcon.png";
+
+
+// const items = [
+//   { name: "Apple", embedding: [0.1, 0.2, 0.3] },
+//   { name: "Banana", embedding: [0.4, 0.5, 0.6] },
+//   { name: "Orange", embedding: [0.7, 0.8, 0.9] }
+// ];
 
 function Home() {
   return (
@@ -37,6 +45,7 @@ function Home() {
         </p>
         <p className="highlight">CHEAP CANADIAN PRODUCTS NEAR YOU</p>
         <div className="search-bar">
+        {/* <SearchBar items={items} /> Add the SearchBar component */}
           <div className="input-group">
             <label>PRODUCT:</label>
             <input type="text" placeholder=" EGGS" />

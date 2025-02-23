@@ -1,6 +1,6 @@
 # 🇨🇦Maple Biz : Local Tariff-Affected Product Finder
 
-This application helps Canadian users quickly locate nearby businesses offering products impacted by new U.S. tariffs. Simply search by postal code and item to support local businesses and find tariff-affected items efficiently.
+This application helps Canadian users quickly locate nearby businesses offering products impacted by new U.S. tariffs. Simply search by postal code and item to support local businesses and find tariff-affected items cost efficiently.
 
 ## 📜 Tech Stack
 ### Frontend: HTML, CSS, JavaScript, React

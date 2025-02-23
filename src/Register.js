@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "./firebaseConfig";
+import * as XLSX from "xlsx";
+import Papa from "papaparse";
 import "./register.css";
 import logo from "./Logo.png";
 import addProductIcon from "./addProduct.png";
@@ -11,14 +13,71 @@ function Register() {
   const [Location, SetLocation] = useState("");
   const [Items, SetItems] = useState([]);
   const [SingleItem, SetSingleItem] = useState("");
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const fileInputRef = useRef(null);
 
+  // Add item manually
   const addItem = () => {
     if (SingleItem.trim() !== "") {
-      SetItems([...Items, SingleItem]);
+      SetItems([...Items, { name: SingleItem, cost: "" }]);
       SetSingleItem(""); // Clear input
     }
   };
 
+  // Handle file upload and extract items
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+      extractItemsFromFile(file);
+    }
+  };
+
+  const extractItemsFromFile = (file) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = e.target.result;
+      let items = [];
+
+      if (file.name.endsWith(".xlsx")) {
+        const workbook = XLSX.read(data, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        items = jsonData
+          .map((row) => ({ name: row[0], cost: row[1] }))
+          .filter((item) => item.name && item.cost !== undefined);
+      } else if (file.name.endsWith(".csv")) {
+        Papa.parse(data, {
+          complete: (result) => {
+            const parsedItems = result.data
+              .map((row) => ({ name: row[0], cost: row[1] }))
+              .filter((item) => item.name && item.cost !== undefined);
+            SetItems(parsedItems);
+          },
+          header: false,
+        });
+        return;
+      }
+
+      SetItems(items);
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
+  // Clear file input
+  const clearFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setUploadedFile(null);
+    SetItems([]);
+  };
+
+  // Save data to Firestore
   const saveDataToFirestore = async () => {
     if (
       !BusinessName.trim() ||
@@ -111,6 +170,23 @@ function Register() {
           {/* Products Section */}
           <div className="generalInformation">
             <h2>PRODUCTS SOLD</h2>
+
+            {/* File Upload */}
+            <div className="input-group" style={{ marginBottom: "10px" }}>
+              <label>Upload Excel/CSV:</label>
+              <input
+                type="file"
+                accept=".xlsx, .csv"
+                onChange={handleFileUpload}
+                ref={fileInputRef}
+                style={{ marginLeft: "10px" }}
+              />
+              <button onClick={clearFileInput} style={{ marginLeft: "10px" }}>
+                Clear File
+              </button>
+            </div>
+
+            {/* Manual Item Addition */}
             <div className="input-group">
               <label>ADD ITEM:</label>
               <input
@@ -132,14 +208,16 @@ function Register() {
             <table className="product-table">
               <thead>
                 <tr>
-                  <th style={{ width: "50%" }}>Product</th>
-                  <th style={{ width: "50%" }}>Remove</th>
+                  <th style={{ width: "40%" }}>Product</th>
+                  <th style={{ width: "30%" }}>Cost</th>
+                  <th style={{ width: "30%" }}>Remove</th>
                 </tr>
               </thead>
               <tbody>
                 {Items.map((item, index) => (
                   <tr key={index}>
-                    <td>{item}</td>
+                    <td>{item.name}</td>
+                    <td>{item.cost ? `$${item.cost}` : "N/A"}</td>
                     <td>
                       <button
                         onClick={() =>

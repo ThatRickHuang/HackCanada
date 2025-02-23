@@ -17,13 +17,14 @@ Firebase Firestore: Stores business details, product information, and vectors fo
 Firebase Hosting: Provides secure, scalable, and fast hosting for the React frontend application. Enables easy deployment, custom domain management, and seamless integration with Firebase backend services.
 
 ## 📦 Setup & Installation
-
-In the project directory, you can run:
-
-### `npm install react@18.0.0 react-dom@18.0.0`
+After cloning the repository, install these dependencies in the project directory:
 ### `npm install`
-After cloning the repository, install these dependencies^
+### `npm install react@18.0.0 react-dom@18.0.0`
+### `npm install firebase`
+### `npm install @google/generative-ai`
+### `npm install papaparse`
 
+After installing dependencies, run the program:
 ### `npm start`
 
 Runs the app in the development mode.\

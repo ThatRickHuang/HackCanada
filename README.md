@@ -7,7 +7,7 @@ This application helps Canadian users quickly locate nearby businesses offering 
 React: Builds a dynamic, interactive user interface. JavaScript: Manages frontend logic, API integration, and user interactions. HTML & CSS: Structures and styles responsive and visually appealing web pages.
 
 ### Backend: Node.js, Firebase Firestore
-Firebase Firestor: Stores business details, product information, and vectors for efficient retrieval. Node.js: Powers the backend services and API endpoints.
+Firebase Firestore: Stores business details, product information, and vectors for efficient retrieval. Node.js: Powers the backend services and API endpoints.
 
 ### AI: Google Gemini API's
 1. embedding-001: Converts business and product information into numerical vectors for efficient semantic matching and retrieval.

@@ -4,6 +4,8 @@ import "./index.css";
 // Import images from the same directory
 import leavesGif from "./leaves.gif";
 import logo from "./Logo.png";
+import "./services/SearchBar";
+import SearchBar from "./services/SearchBar";
 
 function Home() {
   return (
@@ -44,8 +46,9 @@ function Home() {
         {/* Search Bar */}
         <div className="search-bar">
           <div className="input-group">
-            <label>PRODUCT:</label>
-            <input type="text" placeholder="EGGS" />
+            <SearchBar className="input-group">
+              <label>PRODUCT:</label>
+            </SearchBar>
           </div>
           <div className="input-group">
             <label>POSTCODE:</label>
